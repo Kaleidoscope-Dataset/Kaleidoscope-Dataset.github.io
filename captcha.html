@@ -120,7 +120,8 @@
 <script>
     // Replace with your actual Django backend URL
     const DJANGO_BACKEND_URL = 'https://dataset.ckodser.ir/api/verify_captcha/';
-    const REDIRECT_URL = 'datasetview';
+    const urlParams = new URLSearchParams(window.location.search);
+    const REDIRECT_URL = urlParams.get('redirect') || 'datasetview';
 
     document.getElementById('verification-form').addEventListener('submit', async function(e) {
         e.preventDefault();
