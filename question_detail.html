@@ -405,12 +405,39 @@
 </script>
 <script>
     // Check if user is verified
-    function checkCaptchaVerification() {
+    async function checkCaptchaVerification() {
         const captchaToken = localStorage.getItem('captcha_token');
+        console.log('Start checking the captcha token');
         if (!captchaToken) {
-            // Redirect to captcha page
+            console.log('No captcha token found, redirecting to captcha page in 10 seconds...');
+
+            // Prepare redirect URL
             const currentPage = window.location.pathname.split('/').pop() || 'datasetview';
-            window.location.href = `captcha?redirect=${currentPage}${window.location.search}`;
+            const redirectUrl = `captcha?redirect=${encodeURIComponent(currentPage + window.location.search)}`;
+
+            // Redirect to captcha page
+            window.location.href = redirectUrl;
+        } else {
+            // Optional: Verify the token is still valid with your backend
+            try {
+                const response = await fetch('https://dataset.ckodser.ir/api/validate_token/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ token: captchaToken }),
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    console.log('Token is not valid. Removing the token...');
+                    // Token is invalid or expired
+                    localStorage.removeItem('captcha_token');
+                    checkCaptchaVerification(); // Restart the verification process
+                }
+            } catch (error) {
+                console.error('Error validating captcha token:', error);
+            }
         }
     }
 

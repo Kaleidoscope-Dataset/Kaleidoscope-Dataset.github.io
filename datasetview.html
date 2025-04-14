@@ -521,17 +521,6 @@
         if (!captchaToken) {
             console.log('No captcha token found, redirecting to captcha page in 10 seconds...');
 
-            // Create and show a countdown message
-            const messageDiv = document.createElement('div');
-            messageDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; z-index: 1000;';
-            document.body.appendChild(messageDiv);
-
-            // Countdown from 10 seconds
-            for (let i = 30; i > 0; i--) {
-                messageDiv.textContent = `Redirecting to verification page in ${i} seconds...`;
-                await new Promise(resolve => setTimeout(resolve, 1000));
-            }
-
             // Prepare redirect URL
             const currentPage = window.location.pathname.split('/').pop() || 'datasetview';
             const redirectUrl = `captcha?redirect=${encodeURIComponent(currentPage + window.location.search)}`;
