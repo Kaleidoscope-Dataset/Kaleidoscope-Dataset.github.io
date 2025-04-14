@@ -519,7 +519,7 @@
         const captchaToken = localStorage.getItem('captcha_token');
         console.log('Start checking the captcha token');
         if (!captchaToken) {
-            console.log('No captcha token found, redirecting to captcha page in 10 seconds...');
+            console.log('No captcha token found, redirecting to captcha page...');
 
             // Prepare redirect URL
             const currentPage = window.location.pathname.split('/').pop() || 'datasetview';
