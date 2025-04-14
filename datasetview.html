@@ -3,282 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kaleidoscope Dataset Viewer</title>
+    <title>Kaleidoscope - Multimodal Multilingual Benchmark</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    
     <!-- Favicon -->
-    <link rel="icon" href="/kaleidoscope-dataset/static/favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="/kaleidoscope-dataset/static/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="192x192" href="/kaleidoscope-dataset/static/android-chrome-192x192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="/kaleidoscope-dataset/static/android-chrome-512x512.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/kaleidoscope-dataset/static/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/kaleidoscope-dataset/static/favicon-16x16.png">
-    <link rel="manifest" href="/kaleidoscope-dataset/static/site.webmanifest">
-    
+    <link rel="icon" href="static/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="static/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="static/android-chrome-512x512.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="static/favicon-16x16.png">
+    <link rel="manifest" href="static/site.webmanifest">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="/kaleidoscope-dataset/static/CohereVariable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preconnect" href="static/CohereVariable.woff2" as="font" type="font/woff2" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="/kaleidoscope-dataset/static/index.css" rel="stylesheet">
-    
+    <link href="static/index.css" rel="stylesheet">
     <style>
         @font-face {
             font-family: 'CohereVariable';
-            src: url('/kaleidoscope-dataset/static/CohereVariable.woff2') format('woff2-variations');
+            src: url('static/CohereVariable.woff2') format('woff2-variations');
             font-weight: 100 900;
         }
-        
+
         .font-variable {
             font-family: CohereVariable, Arial, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
         }
-        
+
         .text-4xl {
             font-size: 2rem;
             line-height: 115%;
             letter-spacing: .01em;
         }
-        
+
         .custom-heading {
             font-variation-settings: 'cuts' 100, 'move' 100;
             font-variant-ligatures: common-ligatures;
             margin-bottom: 1.25rem !important;
         }
-        
+
         @media (max-width: 767px) {
             .desktop-only {
                 display: none;
             }
         }
-        
-        /* Dataset viewer specific styles */
+
         .rtl-text {
             direction: rtl;
             text-align: right;
         }
-        
-        /* Question Card Styles */
+
         .question-card {
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
             margin-bottom: 20px;
-            border: none;
-            overflow: hidden;
+            height: 100%;
         }
-        
-        .question-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
-        }
-        
-        .question-header {
-            padding: 12px 15px;
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ef 100%);
-            border-bottom: 1px solid #e0e5ec;
-            position: relative;
-        }
-        
-        .question-header::before {
-            content: 'Q';
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            width: 24px;
-            height: 24px;
-            background-color: #4a6cf7;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 12px;
-            opacity: 0.8;
-        }
-        
-        .question-title {
-            font-weight: 500;
-            color: #2d3748;
-            margin-left: 18px;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-        
-        .question-title p {
-            margin-bottom: 0.3rem;
-        }
-        
-        .question-title p:last-child {
-            margin-bottom: 0;
-        }
-        
-        .card-header {
-            padding: 8px 12px;
-            font-size: 12px;
-        }
-        
-        .card-body {
-            padding: 12px 15px;
-        }
-        
-        .card-footer {
-            padding: 6px 12px;
-            font-size: 11px;
-        }
-        
-        .option-item {
-            padding: 8px 12px;
-            border-radius: 6px;
-            margin-bottom: 6px;
-            background-color: #f8fafc;
-            border: 1px solid #e9ecef;
-            transition: all 0.2s;
-            font-size: 13px;
-        }
-        
-        .option-item:hover {
-            background-color: #edf2ff;
-            border-color: #d0deff;
-        }
-        
-        .correct-answer {
-            background-color: #ebfbee;
-            border-color: #c3e6cb;
-        }
-        
+
         .question-image {
             max-width: 100%;
-            max-height: 200px;
-            border-radius: 6px;
-            display: block;
-            margin: 12px auto;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            height: auto;
+            margin: 10px 0;
         }
-        
-        .btn-sm {
-            font-size: 12px;
-            padding: 0.25rem 0.5rem;
+
+        .options-list {
+            margin-top: 15px;
         }
-        
+
+        .option-item {
+            margin-bottom: 5px;
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .correct-answer {
+            background-color: rgba(25, 135, 84, 0.1);
+            border-left: 3px solid #198754;
+        }
+
+        .option-letter {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
         .badge-category {
             background-color: #6c757d;
             color: white;
-            font-weight: normal;
-            padding: 3px 6px;
-            font-size: 11px;
+            padding: 5px 10px;
+            border-radius: 4px;
         }
-        
-        .pagination {
-            justify-content: center;
-            margin-top: 20px;
-        }
-        
-        .page-link {
-            font-size: 13px;
-            padding: 0.3rem 0.6rem;
-        }
-        
-        .hidden-option {
-            display: none !important;
-        }
-        
+
         .loading-spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top: 4px solid #3498db;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* Filters section */
-        .filters {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-        
-        .form-label {
-            font-weight: 500;
-            font-size: 14px;
-            color: #4a5568;
-        }
-        
-        /* Results summary */
-        .results-summary {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-            padding: 10px 15px;
-            background-color: #f0f4f8;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            height: 100px;
         }
-        
-        /* Hero section */
-        .hero {
-            text-align: center;
-            margin-bottom: 2rem;
+
+        .hidden-option {
+            display: none;
         }
-        
-        .hero h1 {
-            margin-bottom: 0.5rem;
-        }
-        
-        .hero p {
-            color: #6c757d;
-            font-size: 1.1rem;
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
         }
     </style>
 </head>
 <body>
+    <div id="loading-overlay">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
     <div class="container">
         <div class="header-pattern"></div>
         <div class="container">
             <nav class="navbar">
                 <a href="https://cohere.com/research" class="desktop-only logo text-4xl font-variable !mb-5" style="font-variation-settings:'cuts' 100, 'move' 100;font-variant-ligatures:common-ligatures;font-weight:500">
-                    <img src="/kaleidoscope-dataset/static/forAI.png" alt="For AI logo" width="40" height="40">
+                    <img src="static/forAI.png" alt="For AI logo" width="40" height="40">
                     Cohere For AI
                 </a>
-                
+
                 <div class="logo hero">
                     <a href="/" class="text-4xl font-variable !mb-5" style="font-variation-settings:'cuts' 100, 'move' 100;font-variant-ligatures:common-ligatures;font-weight:500">Kaleidoscope</a>
                 </div>
             </nav>
         </div>
-        
-        <!-- Hero section -->
-        <div class="hero">
-            <h1 class="font-variable custom-heading">Dataset Viewer</h1>
-            <p>Explore our multilingual question-answering dataset</p>
-        </div>
-        
-        <!-- Filters -->
+
         <div class="filters">
-            <form id="filter-form" class="row g-3">
+            <form class="row g-3" id="filter-form">
                 <div class="col-md-3">
                     <label for="language" class="form-label">Language</label>
                     <select name="language" id="language" class="form-select">
                         <option value="">All Languages</option>
-                        <!-- Languages will be populated by JavaScript -->
+                        <!-- Languages will be populated dynamically -->
                     </select>
                 </div>
                 <div class="col-md-3">
                     <label for="category" class="form-label">Category</label>
                     <select name="category" id="category" class="form-select">
                         <option value="">All Categories</option>
-                        <!-- Categories will be populated by JavaScript -->
+                        <!-- Categories will be populated dynamically -->
                     </select>
                 </div>
                 <div class="col-md-4">
@@ -290,310 +165,351 @@
                 </div>
             </form>
         </div>
-        
-        <!-- Results summary -->
+
         <div class="results-summary my-3">
-            <p id="results-count">Loading questions...</p>
-            <a href="#" id="random-shuffle-btn" class="btn btn-sm btn-outline-primary">
-                <i class="fas fa-dice"></i> Random Shuffle
-            </a>
+            <p>Showing <strong id="filtered-count">0</strong> questions out of
+                <strong id="total-count">0</strong> total
+                <a href="#" id="random-shuffle-btn" class="btn btn-sm btn-outline-primary"
+                   style="position: relative; z-index: 10; margin-left: 5px;">
+                    <i class="fas fa-dice"></i> Random Shuffle
+                </a>
+            </p>
         </div>
-        
-        <!-- Questions container -->
-        <div id="questions-container">
-            <div class="row" id="questions-row">
-                <div class="loading-spinner"></div>
-            </div>
+
+        <div class="row" id="questions-container">
+            <!-- Questions will be populated dynamically -->
         </div>
-        
-        <!-- Pagination -->
-        <nav aria-label="Page navigation" id="pagination-container" class="mt-4">
+
+        <nav aria-label="Page navigation">
             <ul class="pagination" id="pagination">
-                <!-- Pagination will be populated by JavaScript -->
+                <!-- Pagination will be populated dynamically -->
             </ul>
         </nav>
-        
-        <!-- Back to home link -->
-        <div class="text-center mt-4 mb-5">
-            <a href="index.html" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left"></i> Back to Home
-            </a>
-        </div>
     </div>
-    
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const API_URL = 'https://dataset.ckodser.ir/api/question-list/';
-            
-            // DOM elements
-            const languageSelect = document.getElementById('language');
-            const categorySelect = document.getElementById('category');
-            const searchInput = document.getElementById('search');
-            const filterForm = document.getElementById('filter-form');
-            const questionsRow = document.getElementById('questions-row');
-            const resultsCount = document.getElementById('results-count');
-            const paginationContainer = document.getElementById('pagination');
-            const randomShuffleBtn = document.getElementById('random-shuffle-btn');
-            
-            // State variables
-            let currentPage = 1;
-            let currentFilters = {
-                language: '',
-                category: '',
-                search: '',
-                random_seed: ''
+        // Global variables
+        let apiData = null;
+        let currentPage = 1;
+        let randomSeed = Math.floor(Math.random() * 10000);
+        let selectedLanguage = '';
+        let selectedCategory = '';
+        let searchQuery = '';
+
+        // API URL - change this to your actual API endpoint
+        const API_BASE_URL = 'https://dataset.ckodser.ir/api/question_list';
+
+        // DOM elements
+        const languageSelect = document.getElementById('language');
+        const categorySelect = document.getElementById('category');
+        const searchInput = document.getElementById('search');
+        const filterForm = document.getElementById('filter-form');
+        const questionsContainer = document.getElementById('questions-container');
+        const pagination = document.getElementById('pagination');
+        const filteredCountElement = document.getElementById('filtered-count');
+        const totalCountElement = document.getElementById('total-count');
+        const randomShuffleBtn = document.getElementById('random-shuffle-btn');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        // Parse URL parameters
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                language: params.get('language') || '',
+                category: params.get('category') || '',
+                search: params.get('search') || '',
+                page: parseInt(params.get('page')) || 1,
+                random_seed: params.get('random_seed') || randomSeed
             };
-            let combinedCounts = {};
-            
-            // Initialize the page
-            init();
-            
-            // Function to initialize the page
-            function init() {
-                // Add event listeners
-                filterForm.addEventListener('submit', handleFilterSubmit);
-                randomShuffleBtn.addEventListener('click', handleRandomShuffle);
-                
-                // Get URL parameters
-                const urlParams = new URLSearchParams(window.location.search);
-                currentFilters.language = urlParams.get('language') || '';
-                currentFilters.category = urlParams.get('category') || '';
-                currentFilters.search = urlParams.get('search') || '';
-                currentFilters.random_seed = urlParams.get('random_seed') || '';
-                currentPage = parseInt(urlParams.get('page') || '1');
-                
-                // Set form values from URL parameters
-                if (currentFilters.language) searchInput.value = currentFilters.language;
-                if (currentFilters.category) searchInput.value = currentFilters.category;
-                if (currentFilters.search) searchInput.value = currentFilters.search;
-                
-                // Load data
-                loadData();
-            }
-            
-            // Function to load data from API
-            function loadData() {
-                // Show loading spinner
-                questionsRow.innerHTML = '<div class="loading-spinner"></div>';
-                
-                // Build API URL with parameters
-                let apiUrl = new URL(API_URL);
-                if (currentFilters.language) apiUrl.searchParams.set('language', currentFilters.language);
-                if (currentFilters.category) apiUrl.searchParams.set('category', currentFilters.category);
-                if (currentFilters.search) apiUrl.searchParams.set('search', currentFilters.search);
-                if (currentFilters.random_seed) apiUrl.searchParams.set('random_seed', currentFilters.random_seed);
-                apiUrl.searchParams.set('page', currentPage);
-                
-                // Fetch data from API
-                fetch(apiUrl)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Update UI with data
-                        displayQuestions(data.questions);
-                        updatePagination(data.pagination);
-                        updateFilters(data.filters);
-                        updateResultsSummary(data.meta);
-                        
-                        // Store combined counts for filter updates
-                        combinedCounts = data.filters.combined_counts;
-                    })
-                    .catch(error => {
-                        console.error('Error fetching data:', error);
-                        questionsRow.innerHTML = `
-                            <div class="col-12 text-center">
-                                <div class="alert alert-danger">
-                                    Failed to load questions. Please try again later.
-                                </div>
-                            </div>
-                        `;
-                    });
-            }
-            
-            // Function to display questions
-            function displayQuestions(questions) {
-                if (!questions || questions.length === 0) {
-                    questionsRow.innerHTML = `
-                        <div class="col-12 text-center">
-                            <div class="alert alert-info">
-                                No questions found. Try changing the filters.
-                            </div>
-                        </div>
-                    `;
-                    return;
+        }
+
+        // Update URL with current filters
+        function updateUrl() {
+            const url = new URL(window.location.href);
+            url.searchParams.set('language', selectedLanguage);
+            url.searchParams.set('category', selectedCategory);
+            url.searchParams.set('search', searchQuery);
+            url.searchParams.set('page', currentPage);
+            url.searchParams.set('random_seed', randomSeed);
+
+            // Replace the current URL without reloading the page
+            window.history.replaceState({}, '', url);
+        }
+
+        // Fetch data from API
+        async function fetchData() {
+            showLoading();
+
+            try {
+                const url = new URL(API_BASE_URL);
+                url.searchParams.set('language', selectedLanguage);
+                url.searchParams.set('category', selectedCategory);
+                url.searchParams.set('search', searchQuery);
+                url.searchParams.set('page', currentPage);
+                url.searchParams.set('random_seed', randomSeed);
+
+                const response = await fetch(url);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
                 }
-                
-                questionsRow.innerHTML = '';
-                
-                questions.forEach(question => {
-                    const questionHtml = `
-                        <div class="col-md-6">
-                            <div class="card question-card">
-                                <div class="card-header d-flex justify-content-between align-items-center">
-                                    <span class="badge badge-category">${question.category_en}</span>
-                                    <small>Question #${question.id}</small>
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title ${question.language === 'fa' || question.language === 'ar' ? 'rtl-text' : ''}">${formatLineBreaks(question.question)}</h5>
-                                    
-                                    ${question.image_path ? `<img src="https://dataset.ckodser.ir/${question.image_path}" alt="Question image" class="question-image">` : ''}
-                                    
-                                    <div class="options-list ${question.language === 'fa' || question.language === 'ar' ? 'rtl-text' : ''}">
-                                        ${question.options.map((option, index) => `
-                                            <div class="option-item ${option.is_correct ? 'correct-answer' : ''}">
-                                                <span class="option-letter">${index + 1}) </span>
-                                                ${option.text}
-                                            </div>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                                <div class="card-footer text-muted">
-                                    <small>${question.general_category_en} | ${question.language_name} | ${question.country}</small>
-                                </div>
-                            </div>
+
+                apiData = await response.json();
+
+                // Update UI with data
+                renderQuestions();
+                renderPagination();
+                updateFilterDropdowns();
+                updateCounts();
+
+                hideLoading();
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                questionsContainer.innerHTML = `
+                    <div class="col-12 text-center">
+                        <div class="alert alert-danger">
+                            Error loading questions. Please try again later.
+                        </div>
+                    </div>
+                `;
+                hideLoading();
+            }
+        }
+
+        // Render questions
+        function renderQuestions() {
+            if (!apiData || !apiData.questions || apiData.questions.length === 0) {
+                questionsContainer.innerHTML = `
+                    <div class="col-12 text-center">
+                        <div class="alert alert-info">
+                            No questions found. Try changing the filters.
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+
+            apiData.questions.forEach(question => {
+                const isRtl = question.language === 'fa' || question.language === 'ar';
+                const rtlClass = isRtl ? 'rtl-text' : '';
+
+                let optionsHtml = '';
+                question.options.forEach((option, index) => {
+                    const correctClass = option.is_correct ? 'correct-answer' : '';
+                    optionsHtml += `
+                        <div class="option-item ${correctClass}">
+                            <span class="option-letter">${index + 1}) </span>
+                            ${option.text}
                         </div>
                     `;
-                    
-                    questionsRow.innerHTML += questionHtml;
                 });
+
+                html += `
+                    <div class="col-md-6">
+                        <div class="card question-card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <span class="badge badge-category">${question.category_en}</span>
+                                <small>Question #${question.id}</small>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title ${rtlClass}">${question.question.replace(/\n/g, '<br>')}</h5>
+
+                                ${question.image_path ? `<img src="https://dataset.ckodser.ir/${question.image_path}" alt="Question image" class="question-image">` : ''}
+
+                                <div class="options-list ${rtlClass}">
+                                    ${optionsHtml}
+                                </div>
+                            </div>
+                            <div class="card-footer text-muted">
+                                <small>${question.general_category_en} | ${question.language_name} | ${question.country}</small>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            questionsContainer.innerHTML = html;
+        }
+
+        // Render pagination
+        function renderPagination() {
+            if (!apiData || !apiData.pagination) return;
+
+            const { current_page, total_pages, has_next, has_previous } = apiData.pagination;
+
+            let html = '';
+
+            // First page and previous buttons
+            if (has_previous) {
+                html += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" data-page="1" aria-label="First">
+                            <span aria-hidden="true">&laquo;&laquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" data-page="${current_page - 1}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                `;
             }
-            
-            // Function to update pagination
-            function updatePagination(pagination) {
-                if (!pagination) return;
-                
-                let paginationHtml = '';
-                
-                // Previous page buttons
-                if (pagination.has_previous) {
-                    paginationHtml += `
-                        <li class="page-item">
-                            <a class="page-link" href="#" data-page="1" aria-label="First">
-                                <span aria-hidden="true">&laquo;&laquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" data-page="${pagination.previous_page}" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                        </li>
-                    `;
-                }
-                
-                // Page numbers
-                const totalPages = pagination.total_pages;
-                const currentPageNum = pagination.current_page;
-                
-                for (let i = Math.max(1, currentPageNum - 2); i <= Math.min(totalPages, currentPageNum + 2); i++) {
-                    paginationHtml += `
-                        <li class="page-item ${i === currentPageNum ? 'active' : ''}">
+
+            // Page numbers
+            for (let i = 1; i <= total_pages; i++) {
+                if (i === current_page ||
+                    (i > current_page - 3 && i < current_page + 3) ||
+                    i === 1 ||
+                    i === total_pages) {
+
+                    const activeClass = i === current_page ? 'active' : '';
+
+                    html += `
+                        <li class="page-item ${activeClass}">
                             <a class="page-link" href="#" data-page="${i}">${i}</a>
                         </li>
                     `;
+
+                    // Add ellipsis
+                    if (i === 1 && current_page - 3 > 1) {
+                        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                    }
+
+                    if (i === total_pages && current_page + 3 < total_pages) {
+                        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                    }
                 }
-                
-                // Next page buttons
-                if (pagination.has_next) {
-                    paginationHtml += `
-                        <li class="page-item">
-                            <a class="page-link" href="#" data-page="${pagination.next_page}" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="#" data-page="${pagination.total_pages}" aria-label="Last">
-                                <span aria-hidden="true">&raquo;&raquo;</span>
-                            </a>
-                        </li>
-                    `;
-                }
-                
-                paginationContainer.innerHTML = paginationHtml;
-                
-                // Add event listeners to pagination links
-                document.querySelectorAll('#pagination .page-link').forEach(link => {
-                    link.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const page = parseInt(this.getAttribute('data-page'));
-                        navigateToPage(page);
-                    });
-                });
             }
-            
-            // Function to update filter dropdowns
-            function updateFilters(filters) {
-                if (!filters) return;
-                
-                // Update language dropdown
-                languageSelect.innerHTML = `<option value="">All Languages (${filters.languages.reduce((sum, lang) => sum + lang.count, 0)})</option>`;
-                filters.languages.forEach(lang => {
-                    const selected = lang.code === currentFilters.language ? 'selected' : '';
-                    languageSelect.innerHTML += `
-                        <option value="${lang.code}" ${selected} data-count="${lang.count}">
-                            ${lang.name} (${lang.count})
-                        </option>
-                    `;
-                });
-                
-                // Update category dropdown
-                categorySelect.innerHTML = `<option value="">All Categories (${filters.categories.reduce((sum, cat) => sum + cat.count, 0)})</option>`;
-                filters.categories.forEach(cat => {
-                    const selected = cat.name === currentFilters.category ? 'selected' : '';
-                    const count = currentFilters.language ? 
-                        (combinedCounts[cat.name] && combinedCounts[cat.name][currentFilters.language] || 0) : 
-                        cat.count;
-                    
-                    categorySelect.innerHTML += `
-                        <option value="${cat.name}" ${selected} data-count="${count}" 
-                            ${count === 0 ? 'class="hidden-option"' : ''}>
-                            ${cat.name} (${count})
-                        </option>
-                    `;
-                });
-                
-                // Add event listeners for filter interactions
-                languageSelect.addEventListener('change', updateCategoryCounts);
-            }
-            
-            // Function to update results summary
-            function updateResultsSummary(meta) {
-                if (!meta) return;
-                
-                resultsCount.innerHTML = `
-                    Showing <strong>${meta.filtered_count}</strong> questions out of 
-                    <strong>${meta.total_count}</strong> total
+
+            // Next and last page buttons
+            if (has_next) {
+                html += `
+                    <li class="page-item">
+                        <a class="page-link" href="#" data-page="${current_page + 1}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" data-page="${total_pages}" aria-label="Last">
+                            <span aria-hidden="true">&raquo;&raquo;</span>
+                        </a>
+                    </li>
                 `;
             }
-            
-            // Function to update category counts based on selected language
-            function updateCategoryCounts() {
-                const selectedLanguage = languageSelect.value;
-                
+
+            pagination.innerHTML = html;
+
+            // Add event listeners to pagination links
+            document.querySelectorAll('.pagination .page-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const page = parseInt(this.getAttribute('data-page'));
+                    if (page) {
+                        currentPage = page;
+                        updateUrl();
+                        fetchData();
+                    }
+                });
+            });
+        }
+
+        // Update filter dropdowns
+        function updateFilterDropdowns() {
+            if (!apiData || !apiData.filters) return;
+
+            // Update language dropdown
+            let languageHtml = `<option value="">All Languages (${apiData.meta.total_count})</option>`;
+            apiData.filters.languages.forEach(lang => {
+                const selected = lang.code === selectedLanguage ? 'selected' : '';
+                languageHtml += `<option value="${lang.code}" ${selected} data-count="${lang.count}">${lang.name} (${lang.count})</option>`;
+            });
+            languageSelect.innerHTML = languageHtml;
+
+            // Update category dropdown
+            let categoryHtml = `<option value="">All Categories (${apiData.meta.total_count})</option>`;
+            apiData.filters.categories.forEach(cat => {
+                const selected = cat.name === selectedCategory ? 'selected' : '';
+                categoryHtml += `<option value="${cat.name}" ${selected} data-count="${cat.count}">${cat.name} (${cat.count})</option>`;
+            });
+            categorySelect.innerHTML = categoryHtml;
+
+            // Update search input
+            searchInput.value = searchQuery;
+        }
+
+        // Update counts
+        function updateCounts() {
+            if (!apiData || !apiData.meta) return;
+
+            filteredCountElement.textContent = apiData.meta.filtered_count;
+            totalCountElement.textContent = apiData.meta.total_count;
+        }
+
+        // Show loading overlay
+        function showLoading() {
+            loadingOverlay.style.display = 'flex';
+        }
+
+        // Hide loading overlay
+        function hideLoading() {
+            loadingOverlay.style.display = 'none';
+        }
+
+        // Initialize
+        function init() {
+            // Get URL parameters
+            const params = getUrlParams();
+            selectedLanguage = params.language;
+            selectedCategory = params.category;
+            searchQuery = params.search;
+            currentPage = params.page;
+            randomSeed = params.random_seed;
+
+            // Add event listeners
+            filterForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                selectedLanguage = languageSelect.value;
+                selectedCategory = categorySelect.value;
+                searchQuery = searchInput.value;
+                currentPage = 1; // Reset to first page when applying filters
+                updateUrl();
+                fetchData();
+            });
+
+            randomShuffleBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                randomSeed = Math.floor(Math.random() * 10000);
+                updateUrl();
+                fetchData();
+            });
+
+            // Initial data fetch
+            fetchData();
+
+            // Add event listeners for dynamic filter updates
+            languageSelect.addEventListener('change', updateFilterCounts);
+            categorySelect.addEventListener('change', updateFilterCounts);
+        }
+
+        // Update filter counts based on selections
+        function updateFilterCounts() {
+            if (!apiData || !apiData.filters) return;
+
+            const selectedLang = languageSelect.value;
+            const selectedCat = categorySelect.value;
+            const combinedCounts = apiData.filters.combined_counts;
+
+            // Update category counts based on selected language
+            if (selectedLang) {
                 Array.from(categorySelect.options).forEach(option => {
-                    if (option.value) { // Skip the "All Categories" option
+                    if (option.value) {
                         const categoryName = option.value;
-                        let newCount = 0;
-                        
-                        if (selectedLanguage && combinedCounts[categoryName]) {
-                            newCount = combinedCounts[categoryName][selectedLanguage] || 0;
-                        } else if (!selectedLanguage && option.dataset.originalCount) {
-                            newCount = parseInt(option.dataset.originalCount);
-                        } else {
-                            newCount = parseInt(option.dataset.count);
-                            // Store original count if not already stored
-                            if (!option.dataset.originalCount) {
-                                option.dataset.originalCount = newCount;
-                            }
-                        }
-                        
+                        const newCount = combinedCounts[categoryName] ? (combinedCounts[categoryName][selectedLang] || 0) : 0;
                         option.textContent = `${categoryName} (${newCount})`;
                         option.dataset.count = newCount;
-                        
+
                         // Hide options with zero count
                         if (newCount === 0) {
                             option.classList.add('hidden-option');
@@ -601,79 +517,32 @@
                             option.classList.remove('hidden-option');
                         }
                     } else {
-                        // Update "All Categories" option count
-                        const totalCount = selectedLanguage ? 
-                            parseInt(document.querySelector(`#language option[value="${selectedLanguage}"]`).dataset.count) : 
-                            parseInt(document.querySelector('#language option[value=""]').textContent.match(/\((\d+)\)/)[1]);
-                        
-                        option.textContent = `All Categories (${totalCount})`;
+                        // Update "All Categories" option
+                        const langCount = apiData.filters.languages.find(l => l.code === selectedLang)?.count || 0;
+                        option.textContent = `All Categories (${langCount})`;
+                    }
+                });
+            } else {
+                // Reset category counts when no language is selected
+                Array.from(categorySelect.options).forEach(option => {
+                    if (option.value) {
+                        const categoryName = option.value;
+                        const cat = apiData.filters.categories.find(c => c.name === categoryName);
+                        const count = cat ? cat.count : 0;
+                        option.textContent = `${categoryName} (${count})`;
+                        option.dataset.count = count;
+
+                        // Show all options
+                        option.classList.remove('hidden-option');
+                    } else {
+                        option.textContent = `All Categories (${apiData.meta.total_count})`;
                     }
                 });
             }
-            
-            // Function to handle filter form submission
-            function handleFilterSubmit(e) {
-                e.preventDefault();
-                
-                // Update filters from form values
-                currentFilters.language = languageSelect.value;
-                currentFilters.category = categorySelect.value;
-                currentFilters.search = searchInput.value;
-                
-                // Reset to page 1 when filters change
-                currentPage = 1;
-                
-                // Update URL and load data
-                updateURL();
-                loadData();
-            }
-            
-            // Function to handle random shuffle button click
-            function handleRandomShuffle(e) {
-                e.preventDefault();
-                
-                // Generate a new random seed
-                currentFilters.random_seed = Math.floor(Math.random() * 10000).toString();
-                
-                // Update URL and load data
-                updateURL();
-                loadData();
-            }
-            
-            // Function to navigate to a specific page
-            function navigateToPage(page) {
-                currentPage = page;
-                updateURL();
-                loadData();
-                
-                // Scroll to top of results
-                document.getElementById('questions-container').scrollIntoView({ behavior: 'smooth' });
-            }
-            
-            // Function to update URL with current filters and page
-            function updateURL() {
-                const url = new URL(window.location.href);
-                
-                // Clear existing parameters
-                url.search = '';
-                
-                // Add current filters to URL
-                if (currentFilters.language) url.searchParams.set('language', currentFilters.language);
-                if (currentFilters.category) url.searchParams.set('category', currentFilters.category);
-                if (currentFilters.search) url.searchParams.set('search', currentFilters.search);
-                if (currentFilters.random_seed) url.searchParams.set('random_seed', currentFilters.random_seed);
-                if (currentPage > 1) url.searchParams.set('page', currentPage);
-                
-                // Update browser history without reloading the page
-                window.history.pushState({}, '', url);
-            }
-            
-            // Helper function to format line breaks like Django's linebreaks filter
-            function formatLineBreaks(text) {
-                if (!text) return '';
-                return text.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>');
-            }
-        });
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
