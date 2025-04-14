@@ -516,7 +516,7 @@
     // Check if user is verified
     async function checkCaptchaVerification() {
         const captchaToken = localStorage.getItem('captcha_token');
-
+        console.log('Start checking the captcha token');
         if (!captchaToken) {
             console.log('No captcha token found, redirecting to captcha page in 10 seconds...');
 
