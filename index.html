@@ -23,7 +23,8 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="/kaleidoscope-dataset/static/CohereVariable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preconnect" href="/kaleidoscope-dataset/static/CohereVariable.woff2" as="font" type="font/woff2"
+          crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
           rel="stylesheet">
 
@@ -97,7 +98,335 @@
             <p class="animate__animated animate__fadeInUp animate__delay-1">Evaluating Multimodal LLMs Across Language
                 Boundaries</p>
         </div>
-        {% include "questions/question_view_small.html" %}
+        <div>
+            <style>
+                @media (max-width: 767px) {
+                    .col-md-6:nth-child(even) {
+                        display: none;
+                    }
+                }
+
+                .body {
+                    background-color: #f8f9fa;
+                    padding-top: 20px;
+                    padding-bottom: 40px;
+                    font-family: 'Poppins', sans-serif;
+                }
+
+                .rtl-text {
+                    direction: rtl;
+                    text-align: right;
+                }
+
+                /* Updated Question Card Styles - Smaller Size */
+                .question-card {
+                    border-radius: 8px;
+                    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+                    transition: transform 0.2s ease, box-shadow 0.2s ease;
+                    margin-bottom: 20px;
+                    border: none;
+                    overflow: hidden;
+                }
+
+                .question-card:hover {
+                    transform: translateY(-3px);
+                    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+                }
+
+                .question-header {
+                    padding: 12px 15px;
+                    background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ef 100%);
+                    border-bottom: 1px solid #e0e5ec;
+                    position: relative;
+                }
+
+                .question-header::before {
+                    content: 'Q';
+                    position: absolute;
+                    top: 8px;
+                    left: 8px;
+                    width: 24px;
+                    height: 24px;
+                    background-color: #4a6cf7;
+                    color: white;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: 600;
+                    font-size: 12px;
+                    opacity: 0.8;
+                }
+
+                .question-title {
+                    font-weight: 500;
+                    color: #2d3748;
+                    margin-left: 18px;
+                    font-size: 14px;
+                    line-height: 1.4;
+                }
+
+                .question-title p {
+                    margin-bottom: 0.3rem;
+                }
+
+                .question-title p:last-child {
+                    margin-bottom: 0;
+                }
+
+                .card-header {
+                    padding: 8px 12px;
+                    font-size: 12px;
+                }
+
+                .card-body {
+                    padding: 12px 15px;
+                }
+
+                .card-footer {
+                    padding: 6px 12px;
+                    font-size: 11px;
+                }
+
+                .option-item {
+                    padding: 8px 12px;
+                    border-radius: 6px;
+                    margin-bottom: 6px;
+                    background-color: #f8fafc;
+                    border: 1px solid #e9ecef;
+                    transition: all 0.2s;
+                    font-size: 13px;
+                }
+
+                .option-item:hover {
+                    background-color: #edf2ff;
+                    border-color: #d0deff;
+                }
+
+                .correct-answer {
+                    background-color: #ebfbee;
+                    border-color: #c3e6cb;
+                }
+
+                .question-image {
+                    max-width: 100%;
+                    max-height: 200px;
+                    border-radius: 6px;
+                    display: block;
+                    margin: 12px auto;
+                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+                }
+
+                .btn-sm {
+                    font-size: 12px;
+                    padding: 0.25rem 0.5rem;
+                }
+
+                .nav-bar {
+                    background: linear-gradient(135deg, #4a6cf7 0%, #2a4bdb 100%);
+                    padding: 15px 0;
+                    margin-bottom: 25px;
+                    border-radius: 8px;
+                    box-shadow: 0 3px 10px rgba(74, 108, 247, 0.2);
+                }
+
+                .nav-bar h1 {
+                    color: white;
+                    margin: 0;
+                    font-weight: 600;
+                    font-size: 20px;
+                }
+
+                .badge-category {
+                    background-color: #6c757d;
+                    color: white;
+                    font-weight: normal;
+                    padding: 3px 6px;
+                    font-size: 11px;
+                }
+
+                .pagination {
+                    justify-content: center;
+                    margin-top: 20px;
+                }
+
+                .page-link {
+                    font-size: 13px;
+                    padding: 0.3rem 0.6rem;
+                }
+
+                @media (max-width: 767px) {
+                    .question-title {
+                        font-size: 13px;
+                    }
+
+                    .question-header {
+                        padding: 10px 15px;
+                    }
+
+                    .nav-bar h1 {
+                        font-size: 18px;
+                    }
+                }
+
+                .hidden-option {
+                    display: none !important;
+                }
+
+                .loading-spinner {
+                    border: 4px solid rgba(0, 0, 0, 0.1);
+                    border-radius: 50%;
+                    border-top: 4px solid #3498db;
+                    width: 40px;
+                    height: 40px;
+                    animation: spin 1s linear infinite;
+                    margin: 20px auto;
+                }
+
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+
+                .row {
+                    display: flex;
+                    flex-wrap: wrap;
+                    margin-right: -15px;
+                    margin-left: -15px;
+                }
+
+                .col-md-6 {
+                    position: relative;
+                    width: 100%;
+                    padding-right: 15px;
+                    padding-left: 15px;
+                }
+
+                @media (min-width: 768px) {
+                    .col-md-6 {
+                        flex: 0 0 50%;
+                        max-width: 50%;
+                    }
+                }
+
+                .card {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    min-width: 0;
+                    word-wrap: break-word;
+                    background-color: #fff;
+                    background-clip: border-box;
+                    border: 1px solid rgba(0, 0, 0, .125);
+                    border-radius: .25rem;
+                }
+
+                .d-flex {
+                    display: flex !important;
+                }
+
+                .justify-content-between {
+                    justify-content: space-between !important;
+                }
+
+                .align-items-center {
+                    align-items: center !important;
+                }
+
+                .mt-3 {
+                    margin-top: 1rem !important;
+                }
+            </style>
+
+            <div id="questions-container">
+                <div class="row" id="questions-row">
+                    <div class="loading-spinner"></div>
+                </div>
+                <div class="text-center mt-3">
+                    <button id="refresh-questions" class="btn btn-sm btn-outline-primary">Load New Questions</button>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Your Django API URL - replace with your actual domain
+                    const API_URL = 'https://dataset.ckodser.ir/questions/api/random-questions/';
+
+                    // Function to load questions
+                    function loadQuestions() {
+                        const questionsRow = document.getElementById('questions-row');
+                        questionsRow.innerHTML = '<div class="loading-spinner"></div>';
+
+                        fetch(API_URL)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error('Network response was not ok');
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                displayQuestions(data.questions);
+                            })
+                            .catch(error => {
+                                console.error('Error fetching questions:', error);
+                                questionsRow.innerHTML = '<div class="col-12 text-center"><p>Failed to load questions. Please try again later.</p></div>';
+                            });
+                    }
+
+                    // Function to display questions
+                    function displayQuestions(questions) {
+                        const questionsRow = document.getElementById('questions-row');
+                        questionsRow.innerHTML = '';
+
+                        questions.forEach(question => {
+                            const questionHtml = `
+          <div class="col-md-6">
+            <div class="card question-card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span class="badge badge-category">${question.category_en}</span>
+                <small>Question #${question.id}</small>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title ${question.language === 'fa' || question.language === 'ar' ? 'rtl-text' : ''}">${formatLineBreaks(question.question)}</h5>
+
+                ${question.image_path ? `<img src="https://dataset.ckodser.ir/${question.image_path}" alt="Question image" class="question-image">` : ''}
+
+                <div class="options-list ${question.language === 'fa' || question.language === 'ar' ? 'rtl-text' : ''}">
+                  ${question.options.map((option, index) => `
+                    <div class="option-item ${option.is_correct ? 'correct-answer' : ''}">
+                      <span class="option-letter">${index + 1}) </span>
+                      ${option.text}
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              <div class="card-footer text-muted">
+                <small>${question.general_category_en} | ${question.language_name} | ${question.country}</small>
+              </div>
+            </div>
+          </div>
+        `;
+
+                            questionsRow.innerHTML += questionHtml;
+                        });
+                    }
+
+                    // Helper function to format line breaks like Django's linebreaks filter
+                    function formatLineBreaks(text) {
+                        if (!text) return '';
+                        return text.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>');
+                    }
+
+                    // Initial load
+                    loadQuestions();
+                });
+            </script>
+        </div>
+
         <div class="text-center mt-4" style="margin-bottom: 0.5rem;">
             <a href="/datasetview" class="btn btn-primary">
                 Try Dataset Viewer
