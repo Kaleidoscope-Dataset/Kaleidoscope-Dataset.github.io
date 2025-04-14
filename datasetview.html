@@ -514,12 +514,49 @@
 </script>
 <script>
     // Check if user is verified
-    function checkCaptchaVerification() {
+    async function checkCaptchaVerification() {
         const captchaToken = localStorage.getItem('captcha_token');
+
         if (!captchaToken) {
-            // Redirect to captcha page
+            console.log('No captcha token found, redirecting to captcha page in 10 seconds...');
+
+            // Create and show a countdown message
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = 'position: fixed; top: 20px; right: 20px; background: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; z-index: 1000;';
+            document.body.appendChild(messageDiv);
+
+            // Countdown from 10 seconds
+            for (let i = 30; i > 0; i--) {
+                messageDiv.textContent = `Redirecting to verification page in ${i} seconds...`;
+                await new Promise(resolve => setTimeout(resolve, 1000));
+            }
+
+            // Prepare redirect URL
             const currentPage = window.location.pathname.split('/').pop() || 'datasetview';
-            window.location.href = `captcha?redirect=${currentPage}${window.location.search}`;
+            const redirectUrl = `captcha?redirect=${encodeURIComponent(currentPage + window.location.search)}`;
+
+            // Redirect to captcha page
+            window.location.href = redirectUrl;
+        } else {
+            // Optional: Verify the token is still valid with your backend
+            try {
+                const response = await fetch('https://dataset.ckodser.ir/api/validate_token/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ token: captchaToken }),
+                    credentials: 'include'
+                });
+
+                if (!response.ok) {
+                    // Token is invalid or expired
+                    localStorage.removeItem('captcha_token');
+                    checkCaptchaVerification(); // Restart the verification process
+                }
+            } catch (error) {
+                console.error('Error validating captcha token:', error);
+            }
         }
     }
 
