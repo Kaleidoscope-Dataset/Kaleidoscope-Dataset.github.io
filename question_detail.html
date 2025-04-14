@@ -185,7 +185,8 @@
         try {
             const url = new URL(API_BASE_URL);
             url.searchParams.set('id', questionId);
-
+            const captchaToken = localStorage.getItem('captcha_token');
+            url.searchParams.set('token', captchaToken);
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
