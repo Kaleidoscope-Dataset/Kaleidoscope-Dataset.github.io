@@ -51,7 +51,8 @@
                 display: none;
             }
         }
-                .loading-spinner {
+
+        .loading-spinner {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -510,6 +511,20 @@
 
     // Initialize when DOM is loaded
     document.addEventListener('DOMContentLoaded', init);
+</script>
+<script>
+    // Check if user is verified
+    function checkCaptchaVerification() {
+        const captchaToken = localStorage.getItem('captchaToken');
+        if (!captchaToken) {
+            // Redirect to captcha page
+            const currentPage = window.location.pathname.split('/').pop() || 'datasetview';
+            window.location.href = `captcha?redirect=${currentPage}${window.location.search}`;
+        }
+    }
+
+    // Run verification check
+    checkCaptchaVerification();
 </script>
 </body>
 </html>

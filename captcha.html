@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaleidoscope - Verification Required</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Favicon -->
+    <link rel="icon" href="static/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="static/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="static/android-chrome-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="static/android-chrome-512x512.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="static/favicon-16x16.png">
+    <link rel="manifest" href="static/site.webmanifest">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="static/CohereVariable.woff2" as="font" type="font/woff2" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="static/index.css" rel="stylesheet">
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <style>
+        @font-face {
+            font-family: 'CohereVariable';
+            src: url('static/CohereVariable.woff2') format('woff2-variations');
+            font-weight: 100 900;
+        }
+
+        .font-variable {
+            font-family: CohereVariable, Arial, ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+        }
+
+        .text-4xl {
+            font-size: 2rem;
+            line-height: 115%;
+            letter-spacing: .01em;
+        }
+
+        .custom-heading {
+            font-variation-settings: 'cuts' 100, 'move' 100;
+            font-variant-ligatures: common-ligatures;
+            margin-bottom: 1.25rem !important;
+        }
+
+        @media (max-width: 767px) {
+            .desktop-only {
+                display: none;
+            }
+        }
+
+        .captcha-container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+    <div id="loading-overlay" style="display: none;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header-pattern"></div>
+        <div class="container">
+            <nav class="navbar">
+                <a href="https://cohere.com/research" class="desktop-only logo text-4xl font-variable !mb-5" style="font-variation-settings:'cuts' 100, 'move' 100;font-variant-ligatures:common-ligatures;font-weight:500">
+                    <img src="static/forAI.png" alt="For AI logo" width="40" height="40">
+                    Cohere For AI
+                </a>
+
+                <div class="logo hero">
+                    <a href="/kaleidoscope-dataset" class="text-4xl font-variable !mb-5" style="font-variation-settings:'cuts' 100, 'move' 100;font-variant-ligatures:common-ligatures;font-weight:500">Kaleidoscope</a>
+                </div>
+            </nav>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-8 offset-md-2">
+                <div class="captcha-container">
+                    <h2 class="text-center mb-4">Verification Required</h2>
+                    <p class="text-center mb-4">
+                        To access the Kaleidoscope dataset, please complete the verification below.
+                    </p>
+
+                    <div id="error-message" class="alert alert-danger" style="display: none;"></div>
+                    <div id="success-message" class="alert alert-success" style="display: none;"></div>
+
+                    <form id="captcha-form" class="text-center">
+                        <div class="mb-4 d-flex justify-content-center">
+                            <div class="g-recaptcha" data-sitekey="6LeAKA0rAAAAAJi3kNiCr_iahZwNzg7U6yc2VQ7Y"></div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Verify</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Global variables
+        const API_VERIFY_URL = 'https://dataset.ckodser.ir/api/verify_captcha';
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const captchaForm = document.getElementById('captcha-form');
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+
+        // Check if user is already verified
+        function checkVerification() {
+            const captchaToken = localStorage.getItem('captchaToken');
+            if (captchaToken) {
+                // Verify the token is still valid
+                validateStoredToken(captchaToken);
+            }
+        }
+
+        // Validate stored token
+        async function validateStoredToken(token) {
+            showLoading();
+
+            try {
+                const response = await fetch(`${API_VERIFY_URL}?validate_token=true`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ token: token }),
+                });
+
+                const data = await response.json();
+
+                if (data.valid) {
+                    // Token is valid, redirect to the requested page or index
+                    redirectToDestination();
+                }
+
+                hideLoading();
+            } catch (error) {
+                console.error('Error validating token:', error);
+                hideLoading();
+                // Clear invalid token
+                localStorage.removeItem('captchaToken');
+            }
+        }
+
+        // Handle form submission
+        captchaForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Hide any previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            // Get reCAPTCHA response
+            const recaptchaResponse = grecaptcha.getResponse();
+
+            if (!recaptchaResponse) {
+                errorMessage.textContent = 'Please complete the reCAPTCHA verification.';
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            // Submit to API for verification
+            submitCaptcha(recaptchaResponse);
+        });
+
+        // Submit captcha to API
+        async function submitCaptcha(recaptchaResponse) {
+            showLoading();
+
+            try {
+                const response = await fetch(API_VERIFY_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        recaptcha_response: recaptchaResponse
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Store the verification token
+                    localStorage.setItem('captchaToken', data.token);
+
+                    // Show success message
+                    successMessage.textContent = 'Verification successful! Redirecting...';
+                    successMessage.style.display = 'block';
+
+                    // Redirect after a short delay
+                    setTimeout(redirectToDestination, 1500);
+                } else {
+                    // Show error message
+                    errorMessage.textContent = data.message || 'Verification failed. Please try again.';
+                    errorMessage.style.display = 'block';
+
+                    // Reset reCAPTCHA
+                    grecaptcha.reset();
+                }
+
+                hideLoading();
+            } catch (error) {
+                console.error('Error verifying captcha:', error);
+                errorMessage.textContent = 'An error occurred. Please try again later.';
+                errorMessage.style.display = 'block';
+                hideLoading();
+
+                // Reset reCAPTCHA
+                grecaptcha.reset();
+            }
+        }
+
+        // Redirect to destination page
+        function redirectToDestination() {
+            // Get the requested page from URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirectTo = urlParams.get('redirect') || 'datasetview';
+
+            // Redirect to the requested page
+            window.location.href = redirectTo;
+        }
+
+        // Show loading overlay
+        function showLoading() {
+            loadingOverlay.style.display = 'flex';
+        }
+
+        // Hide loading overlay
+        function hideLoading() {
+            loadingOverlay.style.display = 'none';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', checkVerification);
+    </script>
+</body>
+</html>
