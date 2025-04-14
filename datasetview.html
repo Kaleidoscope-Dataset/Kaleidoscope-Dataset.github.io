@@ -550,6 +550,7 @@
                 });
 
                 if (!response.ok) {
+                    console.log('Token is not valid. Removing the token...');
                     // Token is invalid or expired
                     localStorage.removeItem('captcha_token');
                     checkCaptchaVerification(); // Restart the verification process
