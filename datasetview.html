@@ -18,8 +18,10 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="/kaleidoscope-dataset/static/CohereVariable.woff2" as="font" type="font/woff2" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="/kaleidoscope-dataset/static/CohereVariable.woff2" as="font" type="font/woff2"
+          crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
     <link href="/kaleidoscope-dataset/static/index.css" rel="stylesheet">
     <style>
         @font-face {
@@ -119,194 +121,196 @@
     </style>
 </head>
 <body>
-    <div id="loading-overlay">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
+<div id="loading-overlay">
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
     </div>
+</div>
 
+<div class="container">
+    <div class="header-pattern"></div>
     <div class="container">
-        <div class="header-pattern"></div>
-        <div class="container">
-            <nav class="navbar">
-                <a href="https://cohere.com/research" class="desktop-only logo text-4xl font-variable !mb-5" style="font-variation-settings:'cuts' 100, 'move' 100;font-variant-ligatures:common-ligatures;font-weight:500">
-                    <img src="/kaleidoscope-dataset/static/forAI.png" alt="For AI logo" width="40" height="40">
-                    Cohere For AI
-                </a>
+        <nav class="navbar">
+            <a href="https://cohere.com/research" class="desktop-only logo text-4xl font-variable !mb-5"
+               style="font-variation-settings:'cuts' 100, 'move' 100;font-variant-ligatures:common-ligatures;font-weight:500">
+                <img src="/kaleidoscope-dataset/static/forAI.png" alt="For AI logo" width="40" height="40">
+                Cohere For AI
+            </a>
 
-                <div class="logo hero">
-                    <a href="/" class="text-4xl font-variable !mb-5" style="font-variation-settings:'cuts' 100, 'move' 100;font-variant-ligatures:common-ligatures;font-weight:500">Kaleidoscope</a>
-                </div>
-            </nav>
-        </div>
-
-        <div class="filters">
-            <form class="row g-3" id="filter-form">
-                <div class="col-md-3">
-                    <label for="language" class="form-label">Language</label>
-                    <select name="language" id="language" class="form-select">
-                        <option value="">All Languages</option>
-                        <!-- Languages will be populated dynamically -->
-                    </select>
-                </div>
-                <div class="col-md-3">
-                    <label for="category" class="form-label">Category</label>
-                    <select name="category" id="category" class="form-select">
-                        <option value="">All Categories</option>
-                        <!-- Categories will be populated dynamically -->
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label for="search" class="form-label">Search</label>
-                    <input type="text" name="search" id="search" class="form-control">
-                </div>
-                <div class="col-md-2 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
-                </div>
-            </form>
-        </div>
-
-        <div class="results-summary my-3">
-            <p>Showing <strong id="filtered-count">0</strong> questions out of
-                <strong id="total-count">0</strong> total
-                <a href="#" id="random-shuffle-btn" class="btn btn-sm btn-outline-primary"
-                   style="position: relative; z-index: 10; margin-left: 5px;">
-                    <i class="fas fa-dice"></i> Random Shuffle
-                </a>
-            </p>
-        </div>
-
-        <div class="row" id="questions-container">
-            <!-- Questions will be populated dynamically -->
-        </div>
-
-        <nav aria-label="Page navigation">
-            <ul class="pagination" id="pagination">
-                <!-- Pagination will be populated dynamically -->
-            </ul>
+            <div class="logo hero">
+                <a href="/" class="text-4xl font-variable !mb-5"
+                   style="font-variation-settings:'cuts' 100, 'move' 100;font-variant-ligatures:common-ligatures;font-weight:500">Kaleidoscope</a>
+            </div>
         </nav>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Global variables
-        let apiData = null;
-        let currentPage = 1;
-        let randomSeed = Math.floor(Math.random() * 10000);
-        let selectedLanguage = '';
-        let selectedCategory = '';
-        let searchQuery = '';
+    <div class="filters">
+        <form class="row g-3" id="filter-form">
+            <div class="col-md-3">
+                <label for="language" class="form-label">Language</label>
+                <select name="language" id="language" class="form-select">
+                    <option value="">All Languages</option>
+                    <!-- Languages will be populated dynamically -->
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="category" class="form-label">Category</label>
+                <select name="category" id="category" class="form-select">
+                    <option value="">All Categories</option>
+                    <!-- Categories will be populated dynamically -->
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="search" class="form-label">Search</label>
+                <input type="text" name="search" id="search" class="form-control">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+            </div>
+        </form>
+    </div>
 
-        // API URL - change this to your actual API endpoint
-        const API_BASE_URL = 'https://dataset.ckodser.ir/api/question-list';
+    <div class="results-summary my-3">
+        <p>Showing <strong id="filtered-count">0</strong> questions out of
+            <strong id="total-count">0</strong> total
+            <a href="#" id="random-shuffle-btn" class="btn btn-sm btn-outline-primary"
+               style="position: relative; z-index: 10; margin-left: 5px;">
+                <i class="fas fa-dice"></i> Random Shuffle
+            </a>
+        </p>
+    </div>
 
-        // DOM elements
-        const languageSelect = document.getElementById('language');
-        const categorySelect = document.getElementById('category');
-        const searchInput = document.getElementById('search');
-        const filterForm = document.getElementById('filter-form');
-        const questionsContainer = document.getElementById('questions-container');
-        const pagination = document.getElementById('pagination');
-        const filteredCountElement = document.getElementById('filtered-count');
-        const totalCountElement = document.getElementById('total-count');
-        const randomShuffleBtn = document.getElementById('random-shuffle-btn');
-        const loadingOverlay = document.getElementById('loading-overlay');
+    <div class="row" id="questions-container">
+        <!-- Questions will be populated dynamically -->
+    </div>
 
-        // Parse URL parameters
-        function getUrlParams() {
-            const params = new URLSearchParams(window.location.search);
-            return {
-                language: params.get('language') || '',
-                category: params.get('category') || '',
-                search: params.get('search') || '',
-                page: parseInt(params.get('page')) || 1,
-                random_seed: params.get('random_seed') || randomSeed
-            };
-        }
+    <nav aria-label="Page navigation">
+        <ul class="pagination" id="pagination">
+            <!-- Pagination will be populated dynamically -->
+        </ul>
+    </nav>
+</div>
 
-        // Update URL with current filters
-        function updateUrl() {
-            const url = new URL(window.location.href);
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Global variables
+    let apiData = null;
+    let currentPage = 1;
+    let randomSeed = Math.floor(Math.random() * 10000);
+    let selectedLanguage = '';
+    let selectedCategory = '';
+    let searchQuery = '';
+
+    // API URL - change this to your actual API endpoint
+    const API_BASE_URL = 'https://dataset.ckodser.ir/api/question-list';
+
+    // DOM elements
+    const languageSelect = document.getElementById('language');
+    const categorySelect = document.getElementById('category');
+    const searchInput = document.getElementById('search');
+    const filterForm = document.getElementById('filter-form');
+    const questionsContainer = document.getElementById('questions-container');
+    const pagination = document.getElementById('pagination');
+    const filteredCountElement = document.getElementById('filtered-count');
+    const totalCountElement = document.getElementById('total-count');
+    const randomShuffleBtn = document.getElementById('random-shuffle-btn');
+    const loadingOverlay = document.getElementById('loading-overlay');
+
+    // Parse URL parameters
+    function getUrlParams() {
+        const params = new URLSearchParams(window.location.search);
+        return {
+            language: params.get('language') || '',
+            category: params.get('category') || '',
+            search: params.get('search') || '',
+            page: parseInt(params.get('page')) || 1,
+            random_seed: params.get('random_seed') || randomSeed
+        };
+    }
+
+    // Update URL with current filters
+    function updateUrl() {
+        const url = new URL(window.location.href);
+        url.searchParams.set('language', selectedLanguage);
+        url.searchParams.set('category', selectedCategory);
+        url.searchParams.set('search', searchQuery);
+        url.searchParams.set('page', currentPage);
+        url.searchParams.set('random_seed', randomSeed);
+
+        // Replace the current URL without reloading the page
+        window.history.replaceState({}, '', url);
+    }
+
+    // Fetch data from API
+    async function fetchData() {
+        showLoading();
+
+        try {
+            const url = new URL(API_BASE_URL);
             url.searchParams.set('language', selectedLanguage);
             url.searchParams.set('category', selectedCategory);
             url.searchParams.set('search', searchQuery);
             url.searchParams.set('page', currentPage);
             url.searchParams.set('random_seed', randomSeed);
 
-            // Replace the current URL without reloading the page
-            window.history.replaceState({}, '', url);
-        }
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
 
-        // Fetch data from API
-        async function fetchData() {
-            showLoading();
+            apiData = await response.json();
 
-            try {
-                const url = new URL(API_BASE_URL);
-                url.searchParams.set('language', selectedLanguage);
-                url.searchParams.set('category', selectedCategory);
-                url.searchParams.set('search', searchQuery);
-                url.searchParams.set('page', currentPage);
-                url.searchParams.set('random_seed', randomSeed);
+            // Update UI with data
+            renderQuestions();
+            renderPagination();
+            updateFilterDropdowns();
+            updateCounts();
 
-                const response = await fetch(url);
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-
-                apiData = await response.json();
-
-                // Update UI with data
-                renderQuestions();
-                renderPagination();
-                updateFilterDropdowns();
-                updateCounts();
-
-                hideLoading();
-            } catch (error) {
-                console.error('Error fetching data:', error);
-                questionsContainer.innerHTML = `
+            hideLoading();
+        } catch (error) {
+            console.error('Error fetching data:', error);
+            questionsContainer.innerHTML = `
                     <div class="col-12 text-center">
                         <div class="alert alert-danger">
                             Error loading questions. Please try again later.
                         </div>
                     </div>
                 `;
-                hideLoading();
-            }
+            hideLoading();
         }
+    }
 
-        // Render questions
-        function renderQuestions() {
-            if (!apiData || !apiData.questions || apiData.questions.length === 0) {
-                questionsContainer.innerHTML = `
+    // Render questions
+    function renderQuestions() {
+        if (!apiData || !apiData.questions || apiData.questions.length === 0) {
+            questionsContainer.innerHTML = `
                     <div class="col-12 text-center">
                         <div class="alert alert-info">
                             No questions found. Try changing the filters.
                         </div>
                     </div>
                 `;
-                return;
-            }
+            return;
+        }
 
-            let html = '';
+        let html = '';
 
-            apiData.questions.forEach(question => {
-                const isRtl = question.language === 'fa' || question.language === 'ar';
-                const rtlClass = isRtl ? 'rtl-text' : '';
+        apiData.questions.forEach(question => {
+            const isRtl = question.language === 'fa' || question.language === 'ar';
+            const rtlClass = isRtl ? 'rtl-text' : '';
 
-                let optionsHtml = '';
-                question.options.forEach((option, index) => {
-                    const correctClass = option.is_correct ? 'correct-answer' : '';
-                    optionsHtml += `
+            let optionsHtml = '';
+            question.options.forEach((option, index) => {
+                const correctClass = option.is_correct ? 'correct-answer' : '';
+                optionsHtml += `
                         <div class="option-item ${correctClass}">
                             <span class="option-letter">${index + 1}) </span>
                             ${option.text}
                         </div>
                     `;
-                });
+            });
 
-                html += `
+            html += `
                     <div class="col-md-6">
                         <div class="card question-card">
                             <div class="card-header d-flex justify-content-between align-items-center">
@@ -314,12 +318,18 @@
                                 <small>Question #${question.id}</small>
                             </div>
                             <div class="card-body">
-                                <h5 class="card-title ${rtlClass}">${question.question.replace(/\n/g, '<br>')}</h5>
+                                <h5 class="card-title ${rtlClass}"><p>${question.question.replace(/\n/g, '<br>')}</p></h5>
 
                                 ${question.image_path ? `<img src="https://dataset.ckodser.ir/${question.image_path}" alt="Question image" class="question-image">` : ''}
 
                                 <div class="options-list ${rtlClass}">
                                     ${optionsHtml}
+                                </div>
+                                <div class="mt-3">
+                                    <a href="question_details?id=${question.id}"
+                                       class="btn btn-sm btn-outline-primary">
+                                        View Details
+                                    </a>
                                 </div>
                             </div>
                             <div class="card-footer text-muted">
@@ -328,22 +338,22 @@
                         </div>
                     </div>
                 `;
-            });
+        });
 
-            questionsContainer.innerHTML = html;
-        }
+        questionsContainer.innerHTML = html;
+    }
 
-        // Render pagination
-        function renderPagination() {
-            if (!apiData || !apiData.pagination) return;
+    // Render pagination
+    function renderPagination() {
+        if (!apiData || !apiData.pagination) return;
 
-            const { current_page, total_pages, has_next, has_previous } = apiData.pagination;
+        const {current_page, total_pages, has_next, has_previous} = apiData.pagination;
 
-            let html = '';
+        let html = '';
 
-            // First page and previous buttons
-            if (has_previous) {
-                html += `
+        // First page and previous buttons
+        if (has_previous) {
+            html += `
                     <li class="page-item">
                         <a class="page-link" href="#" data-page="1" aria-label="First">
                             <span aria-hidden="true">&laquo;&laquo;</span>
@@ -355,37 +365,37 @@
                         </a>
                     </li>
                 `;
-            }
+        }
 
-            // Page numbers
-            for (let i = 1; i <= total_pages; i++) {
-                if (i === current_page ||
-                    (i > current_page - 3 && i < current_page + 3) ||
-                    i === 1 ||
-                    i === total_pages) {
+        // Page numbers
+        for (let i = 1; i <= total_pages; i++) {
+            if (i === current_page ||
+                (i > current_page - 3 && i < current_page + 3) ||
+                i === 1 ||
+                i === total_pages) {
 
-                    const activeClass = i === current_page ? 'active' : '';
+                const activeClass = i === current_page ? 'active' : '';
 
-                    html += `
+                html += `
                         <li class="page-item ${activeClass}">
                             <a class="page-link" href="#" data-page="${i}">${i}</a>
                         </li>
                     `;
 
-                    // Add ellipsis
-                    if (i === 1 && current_page - 3 > 1) {
-                        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-                    }
+                // Add ellipsis
+                if (i === 1 && current_page - 3 > 1) {
+                    html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
+                }
 
-                    if (i === total_pages && current_page + 3 < total_pages) {
-                        html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
-                    }
+                if (i === total_pages && current_page + 3 < total_pages) {
+                    html += `<li class="page-item disabled"><span class="page-link">...</span></li>`;
                 }
             }
+        }
 
-            // Next and last page buttons
-            if (has_next) {
-                html += `
+        // Next and last page buttons
+        if (has_next) {
+            html += `
                     <li class="page-item">
                         <a class="page-link" href="#" data-page="${current_page + 1}" aria-label="Next">
                             <span aria-hidden="true">&raquo;</span>
@@ -397,152 +407,152 @@
                         </a>
                     </li>
                 `;
-            }
-
-            pagination.innerHTML = html;
-
-            // Add event listeners to pagination links
-            document.querySelectorAll('.pagination .page-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const page = parseInt(this.getAttribute('data-page'));
-                    if (page) {
-                        currentPage = page;
-                        updateUrl();
-                        fetchData();
-                    }
-                });
-            });
         }
 
-        // Update filter dropdowns
-        function updateFilterDropdowns() {
-            if (!apiData || !apiData.filters) return;
+        pagination.innerHTML = html;
 
-            // Update language dropdown
-            let languageHtml = `<option value="">All Languages (${apiData.meta.total_count})</option>`;
-            apiData.filters.languages.forEach(lang => {
-                const selected = lang.code === selectedLanguage ? 'selected' : '';
-                languageHtml += `<option value="${lang.code}" ${selected} data-count="${lang.count}">${lang.name} (${lang.count})</option>`;
-            });
-            languageSelect.innerHTML = languageHtml;
-
-            // Update category dropdown
-            let categoryHtml = `<option value="">All Categories (${apiData.meta.total_count})</option>`;
-            apiData.filters.categories.forEach(cat => {
-                const selected = cat.name === selectedCategory ? 'selected' : '';
-                categoryHtml += `<option value="${cat.name}" ${selected} data-count="${cat.count}">${cat.name} (${cat.count})</option>`;
-            });
-            categorySelect.innerHTML = categoryHtml;
-
-            // Update search input
-            searchInput.value = searchQuery;
-        }
-
-        // Update counts
-        function updateCounts() {
-            if (!apiData || !apiData.meta) return;
-
-            filteredCountElement.textContent = apiData.meta.filtered_count;
-            totalCountElement.textContent = apiData.meta.total_count;
-        }
-
-        // Show loading overlay
-        function showLoading() {
-            loadingOverlay.style.display = 'flex';
-        }
-
-        // Hide loading overlay
-        function hideLoading() {
-            loadingOverlay.style.display = 'none';
-        }
-
-        // Initialize
-        function init() {
-            // Get URL parameters
-            const params = getUrlParams();
-            selectedLanguage = params.language;
-            selectedCategory = params.category;
-            searchQuery = params.search;
-            currentPage = params.page;
-            randomSeed = params.random_seed;
-
-            // Add event listeners
-            filterForm.addEventListener('submit', function(e) {
+        // Add event listeners to pagination links
+        document.querySelectorAll('.pagination .page-link').forEach(link => {
+            link.addEventListener('click', function (e) {
                 e.preventDefault();
-                selectedLanguage = languageSelect.value;
-                selectedCategory = categorySelect.value;
-                searchQuery = searchInput.value;
-                currentPage = 1; // Reset to first page when applying filters
-                updateUrl();
-                fetchData();
+                const page = parseInt(this.getAttribute('data-page'));
+                if (page) {
+                    currentPage = page;
+                    updateUrl();
+                    fetchData();
+                }
             });
+        });
+    }
 
-            randomShuffleBtn.addEventListener('click', function(e) {
-                e.preventDefault();
-                randomSeed = Math.floor(Math.random() * 10000);
-                updateUrl();
-                fetchData();
-            });
+    // Update filter dropdowns
+    function updateFilterDropdowns() {
+        if (!apiData || !apiData.filters) return;
 
-            // Initial data fetch
+        // Update language dropdown
+        let languageHtml = `<option value="">All Languages (${apiData.meta.total_count})</option>`;
+        apiData.filters.languages.forEach(lang => {
+            const selected = lang.code === selectedLanguage ? 'selected' : '';
+            languageHtml += `<option value="${lang.code}" ${selected} data-count="${lang.count}">${lang.name} (${lang.count})</option>`;
+        });
+        languageSelect.innerHTML = languageHtml;
+
+        // Update category dropdown
+        let categoryHtml = `<option value="">All Categories (${apiData.meta.total_count})</option>`;
+        apiData.filters.categories.forEach(cat => {
+            const selected = cat.name === selectedCategory ? 'selected' : '';
+            categoryHtml += `<option value="${cat.name}" ${selected} data-count="${cat.count}">${cat.name} (${cat.count})</option>`;
+        });
+        categorySelect.innerHTML = categoryHtml;
+
+        // Update search input
+        searchInput.value = searchQuery;
+    }
+
+    // Update counts
+    function updateCounts() {
+        if (!apiData || !apiData.meta) return;
+
+        filteredCountElement.textContent = apiData.meta.filtered_count;
+        totalCountElement.textContent = apiData.meta.total_count;
+    }
+
+    // Show loading overlay
+    function showLoading() {
+        loadingOverlay.style.display = 'flex';
+    }
+
+    // Hide loading overlay
+    function hideLoading() {
+        loadingOverlay.style.display = 'none';
+    }
+
+    // Initialize
+    function init() {
+        // Get URL parameters
+        const params = getUrlParams();
+        selectedLanguage = params.language;
+        selectedCategory = params.category;
+        searchQuery = params.search;
+        currentPage = params.page;
+        randomSeed = params.random_seed;
+
+        // Add event listeners
+        filterForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            selectedLanguage = languageSelect.value;
+            selectedCategory = categorySelect.value;
+            searchQuery = searchInput.value;
+            currentPage = 1; // Reset to first page when applying filters
+            updateUrl();
             fetchData();
+        });
 
-            // Add event listeners for dynamic filter updates
-            languageSelect.addEventListener('change', updateFilterCounts);
-            categorySelect.addEventListener('change', updateFilterCounts);
-        }
+        randomShuffleBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            randomSeed = Math.floor(Math.random() * 10000);
+            updateUrl();
+            fetchData();
+        });
 
-        // Update filter counts based on selections
-        function updateFilterCounts() {
-            if (!apiData || !apiData.filters) return;
+        // Initial data fetch
+        fetchData();
 
-            const selectedLang = languageSelect.value;
-            const selectedCat = categorySelect.value;
-            const combinedCounts = apiData.filters.combined_counts;
+        // Add event listeners for dynamic filter updates
+        languageSelect.addEventListener('change', updateFilterCounts);
+        categorySelect.addEventListener('change', updateFilterCounts);
+    }
 
-            // Update category counts based on selected language
-            if (selectedLang) {
-                Array.from(categorySelect.options).forEach(option => {
-                    if (option.value) {
-                        const categoryName = option.value;
-                        const newCount = combinedCounts[categoryName] ? (combinedCounts[categoryName][selectedLang] || 0) : 0;
-                        option.textContent = `${categoryName} (${newCount})`;
-                        option.dataset.count = newCount;
+    // Update filter counts based on selections
+    function updateFilterCounts() {
+        if (!apiData || !apiData.filters) return;
 
-                        // Hide options with zero count
-                        if (newCount === 0) {
-                            option.classList.add('hidden-option');
-                        } else {
-                            option.classList.remove('hidden-option');
-                        }
+        const selectedLang = languageSelect.value;
+        const selectedCat = categorySelect.value;
+        const combinedCounts = apiData.filters.combined_counts;
+
+        // Update category counts based on selected language
+        if (selectedLang) {
+            Array.from(categorySelect.options).forEach(option => {
+                if (option.value) {
+                    const categoryName = option.value;
+                    const newCount = combinedCounts[categoryName] ? (combinedCounts[categoryName][selectedLang] || 0) : 0;
+                    option.textContent = `${categoryName} (${newCount})`;
+                    option.dataset.count = newCount;
+
+                    // Hide options with zero count
+                    if (newCount === 0) {
+                        option.classList.add('hidden-option');
                     } else {
-                        // Update "All Categories" option
-                        const langCount = apiData.filters.languages.find(l => l.code === selectedLang)?.count || 0;
-                        option.textContent = `All Categories (${langCount})`;
-                    }
-                });
-            } else {
-                // Reset category counts when no language is selected
-                Array.from(categorySelect.options).forEach(option => {
-                    if (option.value) {
-                        const categoryName = option.value;
-                        const cat = apiData.filters.categories.find(c => c.name === categoryName);
-                        const count = cat ? cat.count : 0;
-                        option.textContent = `${categoryName} (${count})`;
-                        option.dataset.count = count;
-
-                        // Show all options
                         option.classList.remove('hidden-option');
-                    } else {
-                        option.textContent = `All Categories (${apiData.meta.total_count})`;
                     }
-                });
-            }
-        }
+                } else {
+                    // Update "All Categories" option
+                    const langCount = apiData.filters.languages.find(l => l.code === selectedLang)?.count || 0;
+                    option.textContent = `All Categories (${langCount})`;
+                }
+            });
+        } else {
+            // Reset category counts when no language is selected
+            Array.from(categorySelect.options).forEach(option => {
+                if (option.value) {
+                    const categoryName = option.value;
+                    const cat = apiData.filters.categories.find(c => c.name === categoryName);
+                    const count = cat ? cat.count : 0;
+                    option.textContent = `${categoryName} (${count})`;
+                    option.dataset.count = count;
 
-        // Initialize when DOM is loaded
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+                    // Show all options
+                    option.classList.remove('hidden-option');
+                } else {
+                    option.textContent = `All Categories (${apiData.meta.total_count})`;
+                }
+            });
+        }
+    }
+
+    // Initialize when DOM is loaded
+    document.addEventListener('DOMContentLoaded', init);
+</script>
 </body>
 </html>
