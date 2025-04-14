@@ -210,7 +210,8 @@
             url.searchParams.set('search', searchQuery);
             url.searchParams.set('page', currentPage);
             url.searchParams.set('random_seed', randomSeed);
-
+            const captchaToken = localStorage.getItem('captcha_token');
+            url.searchParams.set('token', captchaToken);
             const response = await fetch(url);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
