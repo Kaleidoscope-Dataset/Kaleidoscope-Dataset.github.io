@@ -71,6 +71,64 @@
             margin-bottom: 1.25rem !important;
         }
     </style>
+
+    <!--    Random Questions-->
+    <script defer>
+        (async () => {
+            const API_URL = 'https://dataset.ckodser.ir/api/random-questions/';
+            const questionsRow = document.getElementById('questions-row');
+
+            function formatLineBreaks(text) {
+                if (!text) return '';
+                return text.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>');
+            }
+
+            const questionTemplate = (question) => `
+                <div class="col-md-6">
+                    <div class="card question-card">
+              <div class="card-header d-flex justify-content-between align-items-center">
+                <span class="badge badge-category">${question.category_en}</span>
+                <small>Question #${question.id}</small>
+              </div>
+              <div class="card-body">
+                <h5 class="card-title ${question.language === 'fa' || question.language === 'ar' ? 'rtl-text' : ''}">${formatLineBreaks(question.question)}</h5>
+
+                ${question.image_path ? `<img src="https://dataset.ckodser.ir/${question.image_path}" alt="Question image" class="question-image">` : ''}
+
+                <div class="options-list ${question.language === 'fa' || question.language === 'ar' ? 'rtl-text' : ''}">
+                  ${question.options.map((option, index) => `
+                    <div class="option-item ${option.is_correct ? 'correct-answer' : ''}">
+                      <span class="option-letter">${index + 1}) </span>
+                      ${option.text}
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+              <div class="card-footer text-muted">
+                <small>${question.general_category_en} | ${question.language_name} | ${question.country}</small>
+              </div>
+            </div>
+                </div>
+            `;
+
+            async function loadQuestions() {
+                questionsRow.innerHTML = '<div class="loading-spinner"></div>';
+
+                try {
+                    const response = await fetch(API_URL);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    const data = await response.json();
+                    questionsRow.innerHTML = data.questions.map(question => questionTemplate(question)).join('');
+                } catch (error) {
+                    console.error('Error fetching questions:', error);
+                    questionsRow.innerHTML = '<div class="col-12 text-center"><p>Failed to load questions. Please try again later.</p></div>';
+                }
+            }
+
+            loadQuestions();
+        })();
+
+    </script>
 </head>
 <body>
 <header>
@@ -347,81 +405,6 @@
                     <div class="loading-spinner"></div>
                 </div>
             </div>
-
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    // Your Django API URL - replace with your actual domain
-                    const API_URL = 'https://dataset.ckodser.ir/api/random-questions/';
-
-                    // Function to load questions
-                    function loadQuestions() {
-                        const questionsRow = document.getElementById('questions-row');
-                        questionsRow.innerHTML = '<div class="loading-spinner"></div>';
-
-                        fetch(API_URL)
-                            .then(response => {
-                                if (!response.ok) {
-                                    throw new Error('Network response was not ok');
-                                }
-                                return response.json();
-                            })
-                            .then(data => {
-                                displayQuestions(data.questions);
-                            })
-                            .catch(error => {
-                                console.error('Error fetching questions:', error);
-                                questionsRow.innerHTML = '<div class="col-12 text-center"><p>Failed to load questions. Please try again later.</p></div>';
-                            });
-                    }
-
-                    // Function to display questions
-                    function displayQuestions(questions) {
-                        const questionsRow = document.getElementById('questions-row');
-                        questionsRow.innerHTML = '';
-
-                        questions.forEach(question => {
-                            const questionHtml = `
-          <div class="col-md-6">
-            <div class="card question-card">
-              <div class="card-header d-flex justify-content-between align-items-center">
-                <span class="badge badge-category">${question.category_en}</span>
-                <small>Question #${question.id}</small>
-              </div>
-              <div class="card-body">
-                <h5 class="card-title ${question.language === 'fa' || question.language === 'ar' ? 'rtl-text' : ''}">${formatLineBreaks(question.question)}</h5>
-
-                ${question.image_path ? `<img src="https://dataset.ckodser.ir/${question.image_path}" alt="Question image" class="question-image">` : ''}
-
-                <div class="options-list ${question.language === 'fa' || question.language === 'ar' ? 'rtl-text' : ''}">
-                  ${question.options.map((option, index) => `
-                    <div class="option-item ${option.is_correct ? 'correct-answer' : ''}">
-                      <span class="option-letter">${index + 1}) </span>
-                      ${option.text}
-                    </div>
-                  `).join('')}
-                </div>
-              </div>
-              <div class="card-footer text-muted">
-                <small>${question.general_category_en} | ${question.language_name} | ${question.country}</small>
-              </div>
-            </div>
-          </div>
-        `;
-
-                            questionsRow.innerHTML += questionHtml;
-                        });
-                    }
-
-                    // Helper function to format line breaks like Django's linebreaks filter
-                    function formatLineBreaks(text) {
-                        if (!text) return '';
-                        return text.replace(/\n\n+/g, '</p><p>').replace(/\n/g, '<br>');
-                    }
-
-                    // Initial load
-                    loadQuestions();
-                });
-            </script>
         </div>
 
         <div class="text-center mt-4" style="margin-bottom: 0.5rem;">
