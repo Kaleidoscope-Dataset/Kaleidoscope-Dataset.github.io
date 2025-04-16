@@ -16,6 +16,10 @@
     <link rel="icon" type="image/png" sizes="16x16" href="static/favicon-16x16.png">
     <link rel="manifest" href="static/site.webmanifest">
 
+    <!--    Preconnect to API-->
+    <link rel="preconnect" href="https://dataset.ckodser.ir">
+
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="static/CohereVariable.woff2" as="font" type="font/woff2"
@@ -243,63 +247,59 @@
     function renderQuestions() {
         if (!apiData || !apiData.questions || apiData.questions.length === 0) {
             questionsContainer.innerHTML = `
-                    <div class="col-12 text-center">
-                        <div class="alert alert-info">
-                            No questions found. Try changing the filters.
-                        </div>
-                    </div>
-                `;
+            <div class="col-12 text-center">
+                <div class="alert alert-info">
+                    No questions found. Try changing the filters.
+                </div>
+            </div>
+        `;
             return;
         }
 
-        let html = '';
+        const fragment = document.createDocumentFragment();
+        const template = document.createElement('template');
 
         apiData.questions.forEach(question => {
             const isRtl = question.language === 'fa' || question.language === 'ar';
             const rtlClass = isRtl ? 'rtl-text' : '';
 
-            let optionsHtml = '';
-            question.options.forEach((option, index) => {
-                const correctClass = option.is_correct ? 'correct-answer' : '';
-                optionsHtml += `
-                        <div class="option-item ${correctClass}">
-                            <span class="option-letter">${index + 1}) </span>
-                            ${option.text}
+            const optionsHtml = question.options.map((option, index) => `
+            <div class="option-item ${option.is_correct ? 'correct-answer' : ''}">
+                <span class="option-letter">${index + 1}) </span>
+                ${option.text}
+            </div>
+        `).join('');
+
+            template.innerHTML = `
+            <div class="col-md-6">
+                <div class="card question-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span class="badge badge-category">${question.category_en}</span>
+                        <small>Question #${question.id}</small>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title ${rtlClass}"><p>${question.question.replace(/\n/g, '<br>')}</p></h5>
+                        ${question.image_path ? `<img src="https://dataset.ckodser.ir/${question.image_path}" alt="Question image" class="question-image">` : ''}
+                        <div class="options-list ${rtlClass}">
+                            ${optionsHtml}
                         </div>
-                    `;
-            });
-
-            html += `
-                    <div class="col-md-6">
-                        <div class="card question-card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <span class="badge badge-category">${question.category_en}</span>
-                                <small>Question #${question.id}</small>
-                            </div>
-                            <div class="card-body">
-                                <h5 class="card-title ${rtlClass}"><p>${question.question.replace(/\n/g, '<br>')}</p></h5>
-
-                                ${question.image_path ? `<img src="https://dataset.ckodser.ir/${question.image_path}" alt="Question image" class="question-image">` : ''}
-
-                                <div class="options-list ${rtlClass}">
-                                    ${optionsHtml}
-                                </div>
-                                <div class="mt-3">
-                                    <a href="question_detail?id=${question.id}"
-                                       class="btn btn-sm btn-outline-primary">
-                                        View Details
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="card-footer text-muted">
-                                <small>${question.general_category_en} | ${question.language_name} | ${question.country}</small>
-                            </div>
+                        <div class="mt-3">
+                            <a href="question_detail?id=${question.id}" class="btn btn-sm btn-outline-primary">
+                                View Details
+                            </a>
                         </div>
                     </div>
-                `;
+                    <div class="card-footer text-muted">
+                        <small>${question.general_category_en} | ${question.language_name} | ${question.country}</small>
+                    </div>
+                </div>
+            </div>
+        `;
+            fragment.appendChild(template.content.firstElementChild);
         });
 
-        questionsContainer.innerHTML = html;
+        questionsContainer.innerHTML = '';
+        questionsContainer.appendChild(fragment);
     }
 
     // Render pagination
@@ -535,7 +535,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ token: captchaToken }),
+                    body: JSON.stringify({token: captchaToken}),
                     credentials: 'include'
                 });
 
