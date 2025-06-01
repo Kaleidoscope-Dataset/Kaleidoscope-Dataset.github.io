@@ -226,9 +226,13 @@
             // Update UI with data
             renderQuestions();
             renderPagination();
-            updateFilterDropdowns();
-            updateCounts();
 
+            languageSelect.value = selectedLanguage;
+            categorySelect.value = selectedCategory;
+            searchInput.value = searchQuery;
+            updateFilterCounts();
+
+            updateCounts();
             hideLoading();
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -384,29 +388,6 @@
         });
     }
 
-    // Update filter dropdowns
-    function updateFilterDropdowns() {
-        if (!apiData || !apiData.filters) return;
-
-        // Update language dropdown
-        let languageHtml = `<option value="">All Languages (${apiData.meta.total_count})</option>`;
-        apiData.filters.languages.forEach(lang => {
-            const selected = lang.code === selectedLanguage ? 'selected' : '';
-            languageHtml += `<option value="${lang.code}" ${selected} data-count="${lang.count}">${lang.name} (${lang.count})</option>`;
-        });
-        languageSelect.innerHTML = languageHtml;
-
-        // Update category dropdown
-        let categoryHtml = `<option value="">All Categories (${apiData.meta.total_count})</option>`;
-        apiData.filters.categories.forEach(cat => {
-            const selected = cat.name === selectedCategory ? 'selected' : '';
-            categoryHtml += `<option value="${cat.name}" ${selected} data-count="${cat.count}">${cat.name} (${cat.count})</option>`;
-        });
-        categorySelect.innerHTML = categoryHtml;
-
-        // Update search input
-        searchInput.value = searchQuery;
-    }
 
     // Update counts
     function updateCounts() {
