@@ -119,7 +119,7 @@
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <script>
     // Replace with your actual Django backend URL
-    const DJANGO_BACKEND_URL = 'https://ckodser.gameofgrades.ir/api/verify_captcha/';
+    const DJANGO_BACKEND_URL = 'https://dataset.ckodser.ir/api/verify_captcha/';
     const urlParams = new URLSearchParams(window.location.search);
     const REDIRECT_URL = urlParams.get('redirect') || 'datasetview';
 
@@ -203,7 +203,7 @@
 
     async function verifyExistingToken(token) {
         try {
-            const response = await fetch('https://ckodser.gameofgrades.ir/api/validate_token/', {
+            const response = await fetch('https://dataset.ckodser.ir/api/validate_token/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

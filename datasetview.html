@@ -17,7 +17,7 @@
     <link rel="manifest" href="static/site.webmanifest">
 
     <!--    Preconnect to API-->
-    <link rel="preconnect" href="https://ckodser.gameofgrades.ir">
+    <link rel="preconnect" href="https://dataset.ckodser.ir">
 
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -164,7 +164,7 @@
     let searchQuery = '';
 
     // API URL - change this to your actual API endpoint
-    const API_BASE_URL = 'https://ckodser.gameofgrades.ir/api/question-list';
+    const API_BASE_URL = 'https://dataset.ckodser.ir/api/question-list';
 
     // DOM elements
     const languageSelect = document.getElementById('language');
@@ -279,7 +279,7 @@
                     </div>
                     <div class="card-body">
                         <h5 class="card-title ${rtlClass}"><p>${question.question.replace(/\n/g, '<br>')}</p></h5>
-                        ${question.image_path ? `<img src="https://ckodser.gameofgrades.ir/${question.image_path}" alt="Question image" class="question-image">` : ''}
+                        ${question.image_path ? `<img src="https://dataset.ckodser.ir/${question.image_path}" alt="Question image" class="question-image">` : ''}
                         <div class="options-list ${rtlClass}">
                             ${optionsHtml}
                         </div>
@@ -531,7 +531,7 @@
         } else {
             // Optional: Verify the token is still valid with your backend
             try {
-                const response = await fetch('https://ckodser.gameofgrades.ir/api/validate_token/', {
+                const response = await fetch('https://dataset.ckodser.ir/api/validate_token/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
